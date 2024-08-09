@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockly Programming Environment</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+    <script src="https://unpkg.com/@blockly/theme-dark@3.0.0/dist/index.js"></script>
+    <script src="https://unpkg.com/blockly/javascript_compressed"></script>
+    <script src="https://unpkg.com/blockly/python_compressed"></script>
+    <script src="https://unpkg.com/blockly/php_compressed"></script>
+    <script src="https://unpkg.com/blockly/lua_compressed"></script>
+    <script src="https://unpkg.com/blockly/dart_compressed"></script>
+</head>
+<body>
+    <div class="container">
+        <div id="blocklyDiv"></div>
+        <div id="resize-handle"></div>
+        <div class="code-area">
+            <div class="controls">
+                <button id="generate-code" class="btn">Generate Code</button>
+                <select id="theme-select" class="btn">
+                    <option value="default">Default Theme</option>
+                    <option value="dark">Dark Theme</option>
+                </select>
+                <select id="language-select" class="btn">
+                    <option value="javascript">JavaScript</option>
+                    <option value="python">Python</option>
+                    <option value="php">PHP</option>
+                    <option value="lua">Lua</option>
+                    <option value="dart">Dart</option>
+                </select>
+            </div>
+            <div id="code-output" class="code-output"></div>
+        </div>
+    </div>
+    <xml id="toolbox" style="display: none">
+        <category name="Control" colour="#FF9900">
+            <block type="controls_if"></block>
+            <block type="controls_ifelse"></block>
+            <block type="controls_repeat_ext"></block>
+            <block type="controls_whileUntil"></block>
+            <block type="controls_for"></block>
+            <block type="controls_forEach"></block>
+            <block type="controls_flow_statements"></block>
+        </category>
+        <category name="Logic" colour="#33CCFF">
+            <block type="logic_compare"></block>
+            <block type="logic_operation"></block>
+            <block type="logic_negate"></block>
+            <block type="logic_boolean"></block>
+            <block type="logic_null"></block>
+            <block type="logic_ternary"></block>
+        </category>
+        <category name="Math" colour="#66CC66">
+            <block type="math_number"></block>
+            <block type="math_arithmetic"></block>
+            <block type="math_single"></block>
+            <block type="math_trig"></block>
+            <block type="math_constant"></block>
+            <block type="math_number_property"></block>
+            <block type="math_round"></block>
+            <block type="math_on_list"></block>
+            <block type="math_modulo"></block>
+            <block type="math_constrain"></block>
+            <block type="math_random_int"></block>
+            <block type="math_random_float"></block>
+        </category>
+        <category name="Text" colour="#CC99CC">
+            <block type="text"></block>
+            <block type="text_join"></block>
+            <block type="text_append"></block>
+            <block type="text_length"></block>
+            <block type="text_isEmpty"></block>
+            <block type="text_indexOf"></block>
+            <block type="text_charAt"></block>
+            <block type="text_getSubstring"></block>
+            <block type="text_changeCase"></block>
+            <block type="text_trim"></block>
+            <block type="text_print"></block>
+            <block type="text_prompt_ext"></block>
+        </category>
+        <category name="Lists" colour="#FF6666">
+            <block type="lists_create_with"></block>
+            <block type="lists_create_empty"></block>
+            <block type="lists_repeat"></block>
+            <block type="lists_length"></block>
+            <block type="lists_isEmpty"></block>
+            <block type="lists_indexOf"></block>
+            <block type="lists_getIndex"></block>
+            <block type="lists_setIndex"></block>
+            <block type="lists_getSublist"></block>
+            <block type="lists_split"></block>
+            <block type="lists_sort"></block>
+        </category>
+        <category name="Dictionaries" colour="#5BA58C">
+            <block type="maps_create_with"></block>
+            <block type="maps_create_empty"></block>
+            <block type="maps_get"></block>
+            <block type="maps_set"></block>
+            <block type="maps_keys"></block>
+            <block type="maps_values"></block>
+            <block type="maps_is_empty"></block>
+            <block type="maps_length"></block>
+        </category>
+        <category name="Variables" custom="VARIABLE" colour="#FF9900"></category>
+        <category name="Functions" custom="PROCEDURE" colour="#FFCC00"></category>
+    </xml>
+    <script src="script.js"></script>
+</body>
+</html>
