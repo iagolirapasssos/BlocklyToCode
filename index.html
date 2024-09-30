@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blockly Programming Environment</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Include Highlight.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <!-- Include Highlight.js JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+
     <script src="https://unpkg.com/blockly/blockly.min.js"></script>
     <script src="https://unpkg.com/@blockly/theme-dark@3.0.0/dist/index.js"></script>
     <script src="https://unpkg.com/blockly/javascript_compressed"></script>
@@ -13,6 +18,7 @@
     <script src="https://unpkg.com/blockly/lua_compressed"></script>
     <script src="https://unpkg.com/blockly/dart_compressed"></script>
 </head>
+
 <body>
     <div class="container">
         <div id="blocklyDiv"></div>
@@ -107,6 +113,8 @@
         <category name="Variables" custom="VARIABLE" colour="#FF9900"></category>
         <category name="Functions" custom="PROCEDURE" colour="#FFCC00"></category>
     </xml>
+    <script src="blocks.js"></script>
+    <script src="generators.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

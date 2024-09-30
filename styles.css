@@ -76,7 +76,12 @@ select.btn:hover {
     overflow-y: auto;
 }
 
-/* Estilos para o tema escuro */
+.line-number {
+    display: inline-block;
+    width: 30px;
+    color: #95a5a6;
+}
+
 body.dark-theme {
     background-color: #2c3e50;
     color: #ecf0f1;
@@ -86,7 +91,6 @@ body.dark-theme .code-output {
     background-color: #34495e;
 }
 
-/* Estilos para a toolbox do Blockly */
 .blocklyToolboxDiv {
     background-color: #2c3e50 !important;
     color: #ecf0f1 !important;
@@ -113,3 +117,12 @@ body.dark-theme .code-output {
     height: 20px !important;
     margin-right: 10px !important;
 }
+
+.line-number {
+    display: inline-block;
+    width: 30px; /* Ajuste a largura conforme necessário */
+    text-align: right;
+    color: #888; /* Cor da numeração */
+    user-select: none; /* Não permite selecionar a numeração */
+}
+
