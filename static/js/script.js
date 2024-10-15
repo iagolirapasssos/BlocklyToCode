@@ -236,27 +236,41 @@ async function executeCode() {
     const outputDiv = document.getElementById('code-output');
     outputDiv.innerHTML = '<p>Executing code...</p>';
 
+    const requestBody = {
+        language: language,
+        version: '*',  // Use '*' para a última versão estável
+        files: [{ name: 'main', content: code }],
+        stdin: '',     // Entrada padrão vazia
+        args: [],      // Argumentos vazios
+        compile_timeout: 10000,
+        run_timeout: 3000,
+        compile_memory_limit: -1,
+        run_memory_limit: -1,
+    };
+
     try {
         const response = await fetch('https://emkc.org/api/v2/piston/execute', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                language,
-                version: 'latest',
-                files: [{ name: 'main', content: code }],
-            }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
         });
 
         const result = await response.json();
-        if (result.run.stderr) throw new Error(result.run.stderr);
+        if (!response.ok) {
+            throw new Error(result.message || 'Execution failed');
+        }
 
-        outputDiv.innerHTML = `<pre><code class="execution-result">${escapeHtml(result.run.output)}</code></pre>`;
+        const output = result.run ? result.run.output : 'No output';
+        outputDiv.innerHTML = `<pre><code class="execution-result">${escapeHtml(output)}</code></pre>`;
         hljs.highlightElement(outputDiv.querySelector('code'));
     } catch (error) {
         console.error('Error executing code:', error);
         outputDiv.innerHTML = `<p class="error">Error: ${escapeHtml(error.message)}</p>`;
     }
 }
+
 
 
 // Add event listener for the Execute Code button
