@@ -4,12 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blockly Programming Environment</title>
-    <link rel="stylesheet" href="styles.css">
-    <!-- Include Highlight.js CSS -->
+    <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
-    <!-- Include Highlight.js JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
-
     <script src="https://unpkg.com/blockly/blockly.min.js"></script>
     <script src="https://unpkg.com/@blockly/theme-dark@3.0.0/dist/index.js"></script>
     <script src="https://unpkg.com/blockly/javascript_compressed"></script>
@@ -26,6 +23,7 @@
         <div class="code-area">
             <div class="controls">
                 <button id="generate-code" class="btn">Generate Code</button>
+                <button id="execute-code" class="btn">Execute Code</button>
                 <select id="theme-select" class="btn">
                     <option value="default">Default Theme</option>
                     <option value="dark">Dark Theme</option>
@@ -40,7 +38,9 @@
             </div>
             <div id="code-output" class="code-output"></div>
         </div>
+        
     </div>
+    
     <xml id="toolbox" style="display: none">
         <category name="Control" colour="#FF9900">
             <block type="controls_if"></block>
@@ -85,6 +85,7 @@
             <block type="text_changeCase"></block>
             <block type="text_trim"></block>
             <block type="text_print"></block>
+            <block type="console_log"></block>
             <block type="text_prompt_ext"></block>
         </category>
         <category name="Lists" colour="#FF6666">
@@ -110,11 +111,18 @@
             <block type="maps_is_empty"></block>
             <block type="maps_length"></block>
         </category>
+        
         <category name="Variables" custom="VARIABLE" colour="#FF9900"></category>
         <category name="Functions" custom="PROCEDURE" colour="#FFCC00"></category>
+        
+        <category name="Extensions" colour="160" id="extensionsCategory">
+            <button text="Send Extension" callbackKey="sendExtension"></button>
+        </category>
+	<input type="file" id="extensionInput" style="display:none;" />
     </xml>
-    <script src="blocks.js"></script>
-    <script src="generators.js"></script>
-    <script src="script.js"></script>
+    <script src="js/blocks.js"></script>
+    <script src="js/generators.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>
+
