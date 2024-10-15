@@ -231,54 +231,33 @@ function refreshVariables(workspace) {
 
 async function executeCode() {
     const language = document.getElementById('language-select').value;
-    let code;
-
-    switch (language) {
-        case 'javascript':
-            code = Blockly.JavaScript.workspaceToCode(workspace);
-            break;
-        case 'python':
-            code = Blockly.Python.workspaceToCode(workspace);
-            break;
-        case 'php':
-            code = Blockly.PHP.workspaceToCode(workspace);
-            break;
-        case 'lua':
-            code = Blockly.Lua.workspaceToCode(workspace);
-            break;
-        case 'dart':
-            code = Blockly.Dart.workspaceToCode(workspace);
-            break;
-        default:
-            code = Blockly.JavaScript.workspaceToCode(workspace);
-            break;
-    }
+    const code = Blockly.JavaScript.workspaceToCode(workspace);
 
     const outputDiv = document.getElementById('code-output');
     outputDiv.innerHTML = '<p>Executing code...</p>';
 
     try {
-        const response = await fetch('/execute', {
+        const response = await fetch('https://emkc.org/api/v2/piston/execute', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ code, language }),
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                language,
+                version: 'latest',
+                files: [{ name: 'main', content: code }],
+            }),
         });
 
         const result = await response.json();
+        if (result.run.stderr) throw new Error(result.run.stderr);
 
-        if (!response.ok) {
-            throw new Error(result.error || 'Execution failed');
-        }
-
-        outputDiv.innerHTML = `<pre><code class="execution-result">${escapeHtml(result.output)}</code></pre>`;
+        outputDiv.innerHTML = `<pre><code class="execution-result">${escapeHtml(result.run.output)}</code></pre>`;
         hljs.highlightElement(outputDiv.querySelector('code'));
     } catch (error) {
         console.error('Error executing code:', error);
         outputDiv.innerHTML = `<p class="error">Error: ${escapeHtml(error.message)}</p>`;
     }
 }
+
 
 // Add event listener for the Execute Code button
 document.getElementById('execute-code').addEventListener('click', executeCode);
