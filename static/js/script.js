@@ -228,33 +228,41 @@ function refreshVariables(workspace) {
     }
 }
 
-
 async function executeCode() {
     const language = document.getElementById('language-select').value;
     const code = Blockly.JavaScript.workspaceToCode(workspace);
+
+    const languageVersions = {
+        javascript: '18.15.0', // Node.js
+        python: '3.10.0',
+        php: '8.2.3',
+        lua: '5.4.4',
+        dart: '2.19.6'
+    };
+    const selectedVersion = languageVersions[language] || '*'; // Versão padrão, caso não encontre
 
     const outputDiv = document.getElementById('code-output');
     outputDiv.innerHTML = '<p>Executing code...</p>';
 
     const requestBody = {
         language: language,
-        version: '*',  // Use '*' para a última versão estável
+        version: selectedVersion,
         files: [{ name: 'main', content: code }],
-        stdin: '',     // Entrada padrão vazia
-        args: [],      // Argumentos vazios
+        stdin: '',
+        args: [],
         compile_timeout: 10000,
         run_timeout: 3000,
         compile_memory_limit: -1,
-        run_memory_limit: -1,
+        run_memory_limit: -1
     };
 
     try {
         const response = await fetch('https://emkc.org/api/v2/piston/execute', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify(requestBody),
+            body: JSON.stringify(requestBody)
         });
 
         const result = await response.json();
@@ -270,7 +278,6 @@ async function executeCode() {
         outputDiv.innerHTML = `<p class="error">Error: ${escapeHtml(error.message)}</p>`;
     }
 }
-
 
 
 // Add event listener for the Execute Code button
