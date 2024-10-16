@@ -114,7 +114,7 @@ Blockly.Blocks['maps_length'] = {
 
 
 // Definindo o bloco 'console'
-Blockly.Blocks['println'] = {
+Blockly.Blocks['console_log'] = {
     init: function() {
         this.appendValueInput('MESSAGE')
             .setCheck('String')

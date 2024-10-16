@@ -264,30 +264,30 @@ Blockly.Dart.forBlock['maps_length'] = function(block, generator) {
 };
 
 
-// Gerador de código JavaScript para o bloco 'println'
-Blockly.JavaScript.forBlock['println'] = function(block, generator) {
+// Gerador de código JavaScript para o bloco 'console_log'
+Blockly.JavaScript.forBlock['console_log'] = function(block, generator) {
     var message = Blockly.JavaScript.valueToCode(block, 'MESSAGE', Blockly.JavaScript.ORDER_ATOMIC) || "''";
     var code = `console.log(${message});\n`;
     return code;
 };
 
-Blockly.Dart.forBlock['println'] = function(block, generator) {
+Blockly.Dart.forBlock['console_log'] = function(block, generator) {
     var message = Blockly.Dart.valueToCode(block, 'MESSAGE', Blockly.Dart.ORDER_ATOMIC) || "''";
     var code = `print(${message});\n`;
     return code;
 };
 
-Blockly.Python.forBlock['println'] = function(block, generator) {
+Blockly.Python.forBlock['console_log'] = function(block, generator) {
     var message = Blockly.Python.valueToCode(block, 'MESSAGE', Blockly.Python.ORDER_ATOMIC) || "''";
     var code = `print(${message})\n`;
     return code;
 };
-Blockly.PHP.forBlock['println'] = function(block, generator) {
+Blockly.PHP.forBlock['console_log'] = function(block, generator) {
     var message = Blockly.PHP.valueToCode(block, 'MESSAGE', Blockly.PHP.ORDER_ATOMIC) || "''";
     var code = `echo ${message};\n`;
     return code;
 };
-Blockly.Lua.forBlock['println'] = function(block, generator) {
+Blockly.Lua.forBlock['console_log'] = function(block, generator) {
     var message = Blockly.Lua.valueToCode(block, 'MESSAGE', Blockly.Lua.ORDER_ATOMIC) || "''";
     var code = `print(${message})\n`;
     return code;
