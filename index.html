@@ -24,6 +24,8 @@
             <div class="controls">
                 <button id="generate-code" class="btn">Generate Code</button>
                 <button id="execute-code" class="btn">Execute Code</button>
+                <button id="save-blocks" class="btn">Save Blocks</button>
+                <button id="load-blocks" class="btn">Load Blocks</button>
                 <select id="theme-select" class="btn">
                     <option value="default">Default Theme</option>
                     <option value="dark">Dark Theme</option>
@@ -35,6 +37,7 @@
                     <option value="lua">Lua</option>
                     <option value="dart">Dart</option>
                 </select>
+                <input type="file" id="file-input" style="display: none;" accept=".xml" />
             </div>
             <div id="code-output" class="code-output"></div>
         </div>

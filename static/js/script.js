@@ -299,6 +299,81 @@ async function executeCode() {
     }
 }
 
+// Função para salvar blocos em XML
+function saveBlocks() {
+    const xml = Blockly.Xml.workspaceToDom(workspace);
+    const xmlText = Blockly.Xml.domToPrettyText(xml);
+    const blob = new Blob([xmlText], { type: 'text/xml' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'blocks.xml';
+    a.click();
+
+    URL.revokeObjectURL(url); // Limpar o URL criado
+}
+
+// Função para carregar blocos a partir de XML
+function loadBlocks(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const xmlText = e.target.result;
+        const xml = Blockly.Xml.textToDom(xmlText);
+        Blockly.Xml.domToWorkspace(xml, workspace);
+    };
+    reader.readAsText(file);
+}
+
+// Permitir arrastar e soltar arquivos XML para a tela
+function handleFileDrop(event) {
+    event.preventDefault();
+    const file = event.dataTransfer.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const xmlText = e.target.result;
+
+        try {
+            const parser = new DOMParser();
+            const xml = parser.parseFromString(xmlText, "text/xml");
+
+            if (xml.documentElement.nodeName === "parsererror") {
+                throw new Error("Erro ao analisar o XML.");
+            }
+
+            Blockly.Xml.clearWorkspaceAndLoadFromXml(xml.documentElement, workspace);
+        } catch (error) {
+            console.error("Erro ao carregar o XML:", error);
+            alert("O arquivo XML não é válido.");
+        }
+    };
+    reader.readAsText(file);
+}
+
+
+// Prevenir comportamento padrão de arrastar e soltar
+document.body.addEventListener('dragover', (event) => event.preventDefault());
+document.body.addEventListener('drop', handleFileDrop);
+
+// Adicionar eventos para os botões
+document.getElementById('save-blocks').addEventListener('click', saveBlocks);
+document.getElementById('load-blocks').addEventListener('click', () => {
+    document.getElementById('file-input').click();
+});
+document.getElementById('file-input').addEventListener('change', loadBlocks);
+
+document.body.addEventListener('dragenter', () => {
+    document.getElementById('blocklyDiv').classList.add('dragging');
+});
+
+document.body.addEventListener('dragleave', () => {
+    document.getElementById('blocklyDiv').classList.remove('dragging');
+});
 
 // Add event listener for the Execute Code button
 document.getElementById('execute-code').addEventListener('click', executeCode);

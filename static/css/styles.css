@@ -17,6 +17,16 @@ body {
 #blocklyDiv {
     flex-grow: 1;
     width: 100%;
+    border: 2px dashed #3498db;
+    transition: background-color 0.2s;
+}
+
+#blocklyDiv.dragging {
+    background-color: rgba(52, 152, 219, 0.2);
+}
+
+.controls .btn {
+    margin-right: 10px;
 }
 
 #resize-handle {
