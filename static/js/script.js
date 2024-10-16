@@ -1,3 +1,11 @@
+const codeArea = document.querySelector('.code-area');
+const resizeHandle = document.getElementById('resize-handle');
+const blocklyDiv = document.getElementById('blocklyDiv');
+const container = document.querySelector('.container');
+
+
+let isResizing = false;
+
 // Configuração do workspace Blockly
 var workspace = Blockly.inject('blocklyDiv', {
     toolbox: document.getElementById('toolbox'),
@@ -46,17 +54,17 @@ function generateCode() {
             break;
     }
 
-    // Formatar o código gerado para destacar a sintaxe
+    // Formatar o código para exibição com destaque de sintaxe
     var formattedCode = `<pre><code class="${language}">` + escapeHtml(code) + '</code></pre>';
     
-    // Inserir o código formatado na div
+    // Exibe o código formatado na div de saída
     document.getElementById('code-output').innerHTML = formattedCode;
 
-    // Destacar a sintaxe
-    const codeElement = document.getElementById('code-output').querySelector('code');
+    // Destaca a sintaxe utilizando Highlight.js
+    const codeElement = document.querySelector('#code-output code');
     hljs.highlightElement(codeElement);
 
-    // Adicionar numeração de linha
+    // Adiciona numeração de linha
     addLineNumbers(codeElement);
 }
 
@@ -73,7 +81,7 @@ function addLineNumbers(codeElement) {
     var numberedLines = lines.map((line, index) => {
         return `<span class="line-number">${index + 1}</span> ${line}`;
     }).join('\n');
-    codeElement.innerHTML = numberedLines; // Modificado para manter a formatação
+    codeElement.innerHTML = numberedLines;
 }
 
 // Adicionar evento de clique ao botão de gerar código
@@ -228,7 +236,15 @@ function refreshVariables(workspace) {
     }
 }
 
+let isCoolingDown = false; // Flag de controle do cooldown
+const cooldownTime = 5000; // Tempo de cooldown em milissegundos (5 segundos)
+
 async function executeCode() {
+    if (isCoolingDown) {
+        alert('Please wait before running again. ⏰');
+        return;
+    }
+
     const language = document.getElementById('language-select').value;
 
     // Gerar o código baseado na linguagem selecionada
@@ -297,7 +313,19 @@ async function executeCode() {
         console.error('Error executing code:', error);
         outputDiv.innerHTML = `<p class="error">Error: ${escapeHtml(error.message)}</p>`;
     }
+
+    // Ativar cooldown após a execução
+    startCooldown();
 }
+
+// Função para iniciar o cooldown
+function startCooldown() {
+    isCoolingDown = true;
+    setTimeout(() => {
+        isCoolingDown = false;
+    }, cooldownTime);
+}
+
 
 // Função para salvar blocos em XML
 function saveBlocks() {
@@ -377,3 +405,37 @@ document.body.addEventListener('dragleave', () => {
 
 // Add event listener for the Execute Code button
 document.getElementById('execute-code').addEventListener('click', executeCode);
+
+// Função para redimensionar o Blockly junto com a code-area
+function resizeBlockly() {
+    const blocklyHeight = container.offsetHeight - codeArea.offsetHeight - resizeHandle.offsetHeight;
+    blocklyDiv.style.height = `${blocklyHeight}px`;
+    Blockly.svgResize(workspace); // Atualiza o Blockly para refletir o novo tamanho
+}
+
+resizeHandle.addEventListener('mousedown', (e) => {
+    isResizing = true;
+    document.body.style.cursor = 'ns-resize'; // Muda o cursor para indicar o redimensionamento
+});
+
+document.addEventListener('mousemove', (e) => {
+    if (!isResizing) return;
+
+    const containerHeight = container.offsetHeight;
+    const newHeight = containerHeight - e.clientY;
+
+    // Limita a altura entre um mínimo e um máximo
+    if (newHeight > 100 && newHeight < containerHeight * 0.8) {
+        codeArea.style.height = `${newHeight}px`;
+        resizeBlockly(); // Redimensiona o Blockly sempre que a code-area é alterada
+    }
+});
+
+document.addEventListener('mouseup', () => {
+    isResizing = false;
+    document.body.style.cursor = 'default'; // Restaura o cursor padrão
+});
+
+// Garante que o Blockly redimensione ao carregar a página
+window.addEventListener('load', resizeBlockly);
+window.addEventListener('resize', resizeBlockly); // Redimensiona em caso de alteração de janela

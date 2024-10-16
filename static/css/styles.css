@@ -33,13 +33,16 @@ body {
     height: 5px;
     background-color: #bdc3c7;
     cursor: ns-resize;
+    user-select: none; /* Prevenir seleção */
 }
 
 .code-area {
-    height: 30%;
-    min-height: 100px;
+    height: 30%; /* Altura inicial */
+    min-height: 100px; /* Altura mínima */
+    max-height: 80%; /* Altura máxima */
     display: flex;
     flex-direction: column;
+    transition: height 0.1s ease; /* Suavizar a transição */
 }
 
 .controls {
@@ -90,6 +93,16 @@ select.btn:hover {
     display: inline-block;
     width: 30px;
     color: #95a5a6;
+    text-align: right;
+    user-select: none;
+    margin-right: 10px;
+}
+
+pre code {
+    display: block;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #34495e;
 }
 
 body.dark-theme {
