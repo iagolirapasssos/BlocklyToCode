@@ -32,7 +32,6 @@ function generateCode() {
     var language = document.getElementById('language-select').value;
     var code;
 
-    // Gera o código com base na linguagem selecionada
     switch (language) {
         case 'javascript':
             code = Blockly.JavaScript.workspaceToCode(workspace);
@@ -54,19 +53,19 @@ function generateCode() {
             break;
     }
 
-    // Formatar o código para exibição com destaque de sintaxe
     var formattedCode = `<pre><code class="${language}">` + escapeHtml(code) + '</code></pre>';
-    
-    // Exibe o código formatado na div de saída
     document.getElementById('code-output').innerHTML = formattedCode;
 
-    // Destaca a sintaxe utilizando Highlight.js
     const codeElement = document.querySelector('#code-output code');
+
+    // Primeiro: aplicar o highlight
     hljs.highlightElement(codeElement);
 
-    // Adiciona numeração de linha
+    // Depois: adicionar a numeração de linha
     addLineNumbers(codeElement);
+
 }
+
 
 // Função para escapar caracteres HTML
 function escapeHtml(text) {
@@ -75,14 +74,19 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// Função para adicionar numeração de linha
 function addLineNumbers(codeElement) {
-    var lines = codeElement.innerText.split('\n');
-    var numberedLines = lines.map((line, index) => {
-        return `<span class="line-number">${index + 1}</span> ${line}`;
-    }).join('\n');
-    codeElement.innerHTML = numberedLines;
+    const lines = codeElement.innerText.split('\n');
+
+    let newHtml = '';
+    lines.forEach((line, index) => {
+        const lineNumberHtml = `<span class="line-number">${index + 1}</span>`;
+        const escapedLine = escapeHtml(line); // Mantém segurança em HTML
+        newHtml += `<div class="code-line">${lineNumberHtml}${escapedLine}</div>`;
+    });
+
+    codeElement.innerHTML = newHtml;
 }
+
 
 // Adicionar evento de clique ao botão de gerar código
 document.getElementById('generate-code').addEventListener('click', generateCode);
@@ -195,8 +199,10 @@ extensionInput.addEventListener('change', function (event) {
 
                 const scriptName = file.name.split('.')[0];
                 const newCategory = document.createElement('category');
-                newCategory.setAttribute('name', scriptName);
+                newCategory.setAttribute('name', `${scriptName}`);
                 newCategory.setAttribute('colour', '160');
+                newCategory.setAttribute('id', `ext-${scriptName}`); // Id único pra facilitar remoção
+
 
                 const blocks = getBlocksFromScript(scriptContent);
                 blocks.forEach(block => {
@@ -209,7 +215,38 @@ extensionInput.addEventListener('change', function (event) {
                 const sendExtensionButton = extensionsCategory.querySelector('button');
                 extensionsCategory.insertBefore(newCategory, sendExtensionButton.nextSibling);
 
-                workspace.updateToolbox(document.getElementById('toolbox'));
+                
+                const loadedExtensionsDiv = document.getElementById('loaded-extensions');
+
+
+                const extensionDiv = document.createElement('div');
+                extensionDiv.textContent = scriptName;
+                extensionDiv.style.display = 'inline-block';
+                extensionDiv.style.margin = '5px';
+                extensionDiv.style.padding = '5px';
+                extensionDiv.style.backgroundColor = '#f39c12';
+                extensionDiv.style.color = '#fff';
+                extensionDiv.style.borderRadius = '5px';
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = '🧽';
+                deleteBtn.style.marginLeft = '8px';
+                deleteBtn.style.cursor = 'pointer';
+                deleteBtn.style.background = '#e74c3c';
+                deleteBtn.style.color = '#fff';
+                deleteBtn.style.border = 'none';
+                deleteBtn.style.borderRadius = '3px';
+
+                deleteBtn.addEventListener('click', () => {
+                    newCategory.remove();
+                    extensionDiv.remove();
+                    workspace.updateToolbox(document.getElementById('toolbox'));
+                });
+
+                extensionDiv.appendChild(deleteBtn);
+                loadedExtensionsDiv.appendChild(extensionDiv);
+    
+workspace.updateToolbox(document.getElementById('toolbox'));
 
                 alert("Extension loaded and registered successfully!");
             } catch (error) {
@@ -329,8 +366,8 @@ function startCooldown() {
 
 // Função para salvar blocos em XML
 function saveBlocks() {
-    const xml = Blockly.Xml.workspaceToDom(workspace);
-    const xmlText = Blockly.Xml.domToPrettyText(xml);
+    const xml = Blockly.utils.xml.workspaceToDom(workspace);
+    const xmlText = Blockly.utils.xml.domToPrettyText(xml);
     const blob = new Blob([xmlText], { type: 'text/xml' });
     const url = URL.createObjectURL(blob);
 
@@ -350,8 +387,8 @@ function loadBlocks(event) {
     const reader = new FileReader();
     reader.onload = function (e) {
         const xmlText = e.target.result;
-        const xml = Blockly.Xml.textToDom(xmlText);
-        Blockly.Xml.domToWorkspace(xml, workspace);
+        const xml = Blockly.utils.xml.textToDom(xmlText);
+        Blockly.utils.xml.domToWorkspace(xml, workspace);
     };
     reader.readAsText(file);
 }
@@ -408,33 +445,35 @@ document.getElementById('execute-code').addEventListener('click', executeCode);
 
 // Função para redimensionar o Blockly junto com a code-area
 function resizeBlockly() {
-    const blocklyHeight = container.offsetHeight - codeArea.offsetHeight - resizeHandle.offsetHeight;
-    blocklyDiv.style.height = `${blocklyHeight}px`;
+    blocklyDiv.style.height = '100%';
+    Blockly.svgResize(workspace);
     Blockly.svgResize(workspace); // Atualiza o Blockly para refletir o novo tamanho
 }
 
 resizeHandle.addEventListener('mousedown', (e) => {
     isResizing = true;
-    document.body.style.cursor = 'ns-resize'; // Muda o cursor para indicar o redimensionamento
+    document.body.style.cursor = 'ew-resize';
 });
 
 document.addEventListener('mousemove', (e) => {
     if (!isResizing) return;
 
-    const containerHeight = container.offsetHeight;
-    const newHeight = containerHeight - e.clientY;
+    const containerWidth = container.offsetWidth;
+    const newWidth = containerWidth - e.clientX;
 
-    // Limita a altura entre um mínimo e um máximo
-    if (newHeight > 100 && newHeight < containerHeight * 0.8) {
-        codeArea.style.height = `${newHeight}px`;
-        resizeBlockly(); // Redimensiona o Blockly sempre que a code-area é alterada
+    // Limita largura entre 100px e 60% da largura total
+    if (newWidth > 150 && newWidth < containerWidth * 0.6) {
+        codeArea.style.width = `${newWidth}px`;
+        blocklyDiv.style.width = `${containerWidth - newWidth - resizeHandle.offsetWidth}px`;
+        Blockly.svgResize(workspace);
     }
 });
 
 document.addEventListener('mouseup', () => {
     isResizing = false;
-    document.body.style.cursor = 'default'; // Restaura o cursor padrão
+    document.body.style.cursor = 'default';
 });
+
 
 // Garante que o Blockly redimensione ao carregar a página
 window.addEventListener('load', resizeBlockly);

@@ -1,0 +1,72 @@
+<xml xmlns="https://developers.google.com/blockly/xml">
+  <variables>
+    <variable id="1v!L[_U-$*`mF1}*KH$}">cont</variable>
+  </variables>
+  <block type="variables_set" id="tFE$]4y=.36B@zcC!x1I" x="110" y="30">
+    <field name="VAR" id="1v!L[_U-$*`mF1}*KH$}">cont</field>
+    <value name="VALUE">
+      <block type="math_number" id="R!ez^dRso}S^P|rCz;X^">
+        <field name="NUM">0</field>
+      </block>
+    </value>
+    <next>
+      <block type="controls_whileUntil" id=":$u@Zr`+a_U#.)7fGvdO">
+        <field name="MODE">WHILE</field>
+        <value name="BOOL">
+          <block type="logic_compare" id="W.Cq1q-VH$j[q:N4fYzW">
+            <field name="OP">LT</field>
+            <value name="A">
+              <block type="variables_get" id="8]D8.O$KFAd/L+{:/PlV">
+                <field name="VAR" id="1v!L[_U-$*`mF1}*KH$}">cont</field>
+              </block>
+            </value>
+            <value name="B">
+              <block type="math_number" id="iV%Ji5jx.DHN6di6bI}c">
+                <field name="NUM">30</field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO">
+          <block type="console_log" id="g.h~z%p9~jhI`Oo.)r-x">
+            <value name="MESSAGE">
+              <block type="text_join" id="YPm8yz5$1;Ph2_UcR|NU">
+                <mutation items="2"></mutation>
+                <value name="ADD0">
+                  <block type="text" id="Nmx~/c[7q`uf|+Z;wQ*`">
+                    <field name="TEXT">Contador: </field>
+                  </block>
+                </value>
+                <value name="ADD1">
+                  <block type="variables_get" id="GY*A6bPrw2]9A6Vt:v2?">
+                    <field name="VAR" id="1v!L[_U-$*`mF1}*KH$}">cont</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <next>
+              <block type="variables_set" id="Wnaj2=nnf;N+]ZGfBWu{">
+                <field name="VAR" id="1v!L[_U-$*`mF1}*KH$}">cont</field>
+                <value name="VALUE">
+                  <block type="math_arithmetic" id="sX1f!;3rLDtZlf%7:[j3">
+                    <field name="OP">ADD</field>
+                    <value name="A">
+                      <block type="variables_get" id="Vi.t1h9h0uT)BAFu^db1">
+                        <field name="VAR" id="1v!L[_U-$*`mF1}*KH$}">cont</field>
+                      </block>
+                    </value>
+                    <value name="B">
+                      <block type="math_number" id="nk^*CEYaVhp*QIFGp,*K">
+                        <field name="NUM">1</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+              </block>
+            </next>
+          </block>
+        </statement>
+      </block>
+    </next>
+  </block>
+</xml>
