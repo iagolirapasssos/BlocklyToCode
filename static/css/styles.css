@@ -1,11 +1,16 @@
-body {
-    font-family: 'Arial', sans-serif;
+html, body {
+    height: 100%;
     margin: 0;
     padding: 0;
+    font-family: 'Arial', sans-serif;
     background-color: #f0f0f0;
     display: flex;
     flex-direction: column;
-    height: 100vh;
+}
+
+body.dark-theme {
+    background-color: #2c3e50;
+    color: #ecf0f1;
 }
 
 .container {
@@ -14,45 +19,30 @@ body {
     height: 100vh;
 }
 
-#blocklyDiv {
+.container.horizontal-layout {
     flex-grow: 1;
-    width: 100%;
-    border: 2px dashed #3498db;
-    transition: background-color 0.2s;
-}
-
-#blocklyDiv.dragging {
-    background-color: rgba(52, 152, 219, 0.2);
-}
-
-.controls .btn {
-    margin-right: 10px;
-}
-
-#resize-handle {
-    height: 5px;
-    background-color: #bdc3c7;
-    cursor: ns-resize;
-    user-select: none; /* Prevenir seleção */
-}
-
-.code-area {
-    height: 30%; /* Altura inicial */
-    min-height: 100px; /* Altura mínima */
-    max-height: 80%; /* Altura máxima */
     display: flex;
-    flex-direction: column;
-    transition: height 0.1s ease; /* Suavizar a transição */
+    flex-direction: row;
+    overflow: hidden;
+    height: calc(100vh - 70px); /* Altura descontando a barra de botões */
 }
 
 .controls {
     display: flex;
-    justify-content: space-between;
-    padding: 10px;
+    flex-direction: row;
+    justify-content: center;          /* Centraliza os botões */
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 10px 20px;
     background-color: #34495e;
+    position: relative;
+    z-index: 10;
+    gap: 10px;                        /* Espaçamento entre os botões */
 }
 
-.btn {
+.controls .btn, 
+.controls select.btn {
+    margin: 5px 10px;
     padding: 10px 20px;
     background-color: #2ecc71;
     color: white;
@@ -63,20 +53,49 @@ body {
     transition: background-color 0.3s, transform 0.1s;
 }
 
-.btn:hover {
+.controls .btn:hover, 
+.controls select.btn:hover {
     background-color: #27ae60;
 }
 
-.btn:active {
-    transform: scale(0.98);
-}
-
-select.btn {
+.controls select.btn {
     background-color: #3498db;
 }
 
-select.btn:hover {
+.controls select.btn:hover {
     background-color: #2980b9;
+}
+
+#blocklyDiv {
+    flex-grow: 1;
+    width: 70%;
+    height: 100%;
+    min-width: 300px;
+    border: 2px dashed #3498db;
+    transition: background-color 0.2s;
+}
+
+#blocklyDiv.dragging {
+    background-color: rgba(52, 152, 219, 0.2);
+}
+
+#resize-handle {
+    width: 5px;
+    height: 100%;
+    background-color: #bdc3c7;
+    cursor: ew-resize;
+    user-select: none;
+}
+
+.code-area {
+    width: 30%;
+    height: 100%;
+    min-width: 200px;
+    max-width: 50%;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.1s ease;
+    background-color: #2c3e50; /* Garante preenchimento até embaixo */
 }
 
 .code-output {
@@ -89,15 +108,6 @@ select.btn:hover {
     overflow-y: auto;
 }
 
-.line-number {
-    display: inline-block;
-    width: 30px;
-    color: #95a5a6;
-    text-align: right;
-    user-select: none;
-    margin-right: 10px;
-}
-
 pre code {
     display: block;
     padding: 10px;
@@ -105,13 +115,18 @@ pre code {
     background-color: #34495e;
 }
 
-body.dark-theme {
-    background-color: #2c3e50;
-    color: #ecf0f1;
+.code-line {
+    display: flex;
+    white-space: pre;
 }
 
-body.dark-theme .code-output {
-    background-color: #34495e;
+.line-number {
+    display: inline-block;
+    width: 30px;
+    color: #888;
+    text-align: right;
+    margin-right: 10px;
+    user-select: none;
 }
 
 .blocklyToolboxDiv {
@@ -141,11 +156,6 @@ body.dark-theme .code-output {
     margin-right: 10px !important;
 }
 
-.line-number {
-    display: inline-block;
-    width: 30px; /* Ajuste a largura conforme necessário */
-    text-align: right;
-    color: #888; /* Cor da numeração */
-    user-select: none; /* Não permite selecionar a numeração */
+body.dark-theme .code-output {
+    background-color: #34495e;
 }
-
