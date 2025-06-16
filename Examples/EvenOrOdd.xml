@@ -1,0 +1,100 @@
+<xml xmlns="https://developers.google.com/blockly/xml">
+  <variables>
+    <variable id="V@cNrxH{kOrp@`2P8Un!">i</variable>
+  </variables>
+  <block type="controls_for" id="-67|5Ik|R$Dg#(9WZiih" x="-50" y="70">
+    <field name="VAR" id="V@cNrxH{kOrp@`2P8Un!">i</field>
+    <value name="FROM">
+      <block type="math_number" id="G[YyoDI!$$i|^.|%|/9/">
+        <field name="NUM">0</field>
+      </block>
+    </value>
+    <value name="TO">
+      <block type="math_number" id="j.lkglDBr$V?!kF3i:{6">
+        <field name="NUM">10</field>
+      </block>
+    </value>
+    <value name="BY">
+      <block type="math_number" id="af!Z:h2m8TYg@(bjm=vN">
+        <field name="NUM">1</field>
+      </block>
+    </value>
+    <statement name="DO">
+      <block type="controls_if" id="H#(FIbYTp*K,fT1CDghl">
+        <mutation else="1"></mutation>
+        <value name="IF0">
+          <block type="logic_compare" id="#t?rZcGC~#JmfCf=Pd.8">
+            <field name="OP">EQ</field>
+            <value name="A">
+              <block type="math_modulo" id="!;1FSjyZn$6854jv;5-0">
+                <value name="DIVIDEND">
+                  <block type="variables_get" id="{MtQ5UXGy/;:B3MG.gO{">
+                    <field name="VAR" id="V@cNrxH{kOrp@`2P8Un!">i</field>
+                  </block>
+                </value>
+                <value name="DIVISOR">
+                  <block type="math_number" id="|6uQ*;UfBEUL`=JI.YST">
+                    <field name="NUM">2</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="B">
+              <block type="math_number" id="SJkKQ-*A2ZT^Z=?Tcf6?">
+                <field name="NUM">0</field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="console_log" id=";I;Vaz)xTh~q9R63y/Rq">
+            <value name="MESSAGE">
+              <block type="text_join" id="gFwg=}/GK$lOOf$v[uh?">
+                <mutation items="3"></mutation>
+                <value name="ADD0">
+                  <block type="text" id="g%esn+7EO0+fCPTqFpX]">
+                    <field name="TEXT">The number </field>
+                  </block>
+                </value>
+                <value name="ADD1">
+                  <block type="variables_get" id="/_%fXzt!0/)q-^S)b:H,">
+                    <field name="VAR" id="V@cNrxH{kOrp@`2P8Un!">i</field>
+                  </block>
+                </value>
+                <value name="ADD2">
+                  <block type="text" id="c-QCc[xaL`uRD:~7RwXt">
+                    <field name="TEXT"> is even!</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </statement>
+        <statement name="ELSE">
+          <block type="console_log" id="kW(Rm+Q=ZQ@,@.gAb,7K">
+            <value name="MESSAGE">
+              <block type="text_join" id="GaYGAL/#$MgiH?`xEIC:">
+                <mutation items="3"></mutation>
+                <value name="ADD0">
+                  <block type="text" id="+KbM-}@DbPT8.]lG#gm}">
+                    <field name="TEXT">The number </field>
+                  </block>
+                </value>
+                <value name="ADD1">
+                  <block type="variables_get" id="kRCc19]oku2q]*vWabt2">
+                    <field name="VAR" id="V@cNrxH{kOrp@`2P8Un!">i</field>
+                  </block>
+                </value>
+                <value name="ADD2">
+                  <block type="text" id="^XYvN|5_%|r[6N#9l/Y?">
+                    <field name="TEXT"> is odd!</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </statement>
+      </block>
+    </statement>
+  </block>
+</xml>
