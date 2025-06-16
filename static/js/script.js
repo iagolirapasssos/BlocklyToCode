@@ -431,7 +431,7 @@ function loadBlocks(event) {
     reader.onload = function (e) {
         const xmlText = e.target.result;
         const xml = Blockly.utils.xml.textToDom(xmlText);
-        Blockly.utils.xml.domToWorkspace(xml, workspace);
+        Blockly.Xml.domToWorkspace(xml, workspace);
     };
     reader.readAsText(file);
 }
