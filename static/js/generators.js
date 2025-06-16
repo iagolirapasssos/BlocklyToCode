@@ -292,3 +292,42 @@ Blockly.Lua.forBlock['console_log'] = function(block, generator) {
     var code = `print(${message})\n`;
     return code;
 };
+
+
+//user_input
+// JavaScript
+Blockly.JavaScript.forBlock['user_input'] = function(block) {
+    const message = block.getFieldValue('MESSAGE');
+    const code = `prompt('${message.replace(/'/g, "\\'")}')`;
+    return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+};
+
+// Python
+Blockly.Python.forBlock['user_input'] = function(block) {
+    const message = block.getFieldValue('MESSAGE');
+    const code = `input('${message.replace(/'/g, "\\'")}')`;
+    return [code, Blockly.Python.ORDER_FUNCTION_CALL];
+};
+
+// PHP
+Blockly.PHP.forBlock['user_input'] = function(block) {
+    const message = block.getFieldValue('MESSAGE');
+    const code = `readline('${message.replace(/'/g, "\\'")}')`;
+    return [code, Blockly.PHP.ORDER_FUNCTION_CALL];
+};
+
+// Lua
+Blockly.Lua.forBlock['user_input'] = function(block) {
+    const message = block.getFieldValue('MESSAGE');
+    const code = `io.write('${message.replace(/'/g, "\\'")}')\nio.read()`;
+    return [code, Blockly.Lua.ORDER_ATOMIC];
+};
+
+// Dart
+Blockly.Dart.forBlock['user_input'] = function(block) {
+    const message = block.getFieldValue('MESSAGE');
+    const code = `stdin.readLineSync()`;
+    return [code, Blockly.Dart.ORDER_ATOMIC];
+};
+
+//user_input
