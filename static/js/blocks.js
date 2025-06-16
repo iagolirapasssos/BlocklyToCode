@@ -126,3 +126,16 @@ Blockly.Blocks['console_log'] = {
         this.setHelpUrl('');
     }
 };
+
+
+Blockly.Blocks['user_input'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField("User input")
+            .appendField(new Blockly.FieldTextInput("Type something:"), "MESSAGE");
+        this.setOutput(true, "String");
+        this.setColour(160);
+        this.setTooltip("Pede um valor ao usuário antes de executar o código.");
+        this.setHelpUrl("");
+    }
+};

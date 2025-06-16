@@ -27,6 +27,14 @@ var workspace = Blockly.inject('blocklyDiv', {
     }
 });
 
+window.addEventListener('load', function() {
+    const savedXml = localStorage.getItem('blocklyWorkspace');
+    if (savedXml) {
+        const xml = Blockly.utils.xml.textToDom(savedXml);
+        Blockly.Xml.domToWorkspace(xml, workspace);
+    }
+});
+
 // Função para gerar e formatar o código
 function generateCode() {
     var language = document.getElementById('language-select').value;
@@ -319,6 +327,41 @@ async function executeCode() {
     const outputDiv = document.getElementById('code-output');
     outputDiv.innerHTML = '<p>Executing code...</p>';
 
+    // Substituir inputs por prompts de navegador
+    if (language === 'python') {
+        code = code.replace(/input\(['"](.*?)['"]\)/g, function(match, p1) {
+            const userInput = prompt(p1);
+            return `'${userInput}'`;
+        });
+    }
+    else if (language === 'javascript') {
+        code = code.replace(/prompt\(['"](.*?)['"]\)/g, function(match, p1) {
+            const userInput = prompt(p1);
+            return JSON.stringify(userInput);
+        });
+    }
+    else if (language === 'php') {
+        code = code.replace(/readline\(['"](.*?)['"]\)/g, function(match, p1) {
+            const userInput = prompt(p1);
+            return `'${userInput}'`;
+        });
+    }
+    else if (language === 'lua') {
+        code = code.replace(/io\.read\(\)/g, function() {
+            const userInput = prompt("Lua Input:");
+            return `"${userInput}"`;
+        });
+    }
+    else if (language === 'dart') {
+        code = code.replace(/stdin\.readLineSync\(\)/g, function() {
+            const userInput = prompt("Dart Input:");
+            return `"${userInput}"`;
+        });
+    }
+
+
+
+
     const requestBody = {
         language: language,
         version: selectedVersion,
@@ -366,8 +409,8 @@ function startCooldown() {
 
 // Função para salvar blocos em XML
 function saveBlocks() {
-    const xml = Blockly.utils.xml.workspaceToDom(workspace);
-    const xmlText = Blockly.utils.xml.domToPrettyText(xml);
+    const xml = Blockly.Xml.workspaceToDom(workspace);
+    const xmlText = Blockly.Xml.domToPrettyText(xml);
     const blob = new Blob([xmlText], { type: 'text/xml' });
     const url = URL.createObjectURL(blob);
 
@@ -478,3 +521,10 @@ document.addEventListener('mouseup', () => {
 // Garante que o Blockly redimensione ao carregar a página
 window.addEventListener('load', resizeBlockly);
 window.addEventListener('resize', resizeBlockly); // Redimensiona em caso de alteração de janela
+
+
+workspace.addChangeListener(function() {
+    const xml = Blockly.Xml.workspaceToDom(workspace);
+    const xmlText = Blockly.Xml.domToPrettyText(xml);
+    localStorage.setItem('blocklyWorkspace', xmlText);
+});
