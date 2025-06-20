@@ -27,6 +27,9 @@ var workspace = Blockly.inject('blocklyDiv', {
     }
 });
 
+// guarda uma cópia do XML original do toolbox
+const originalToolboxXmlText = document.getElementById('toolbox').outerHTML;
+const originalToolboxDom = Blockly.utils.xml.textToDom(originalToolboxXmlText);
 
 // Mapa id → cor original
 const originalColors = {};
@@ -534,6 +537,53 @@ function clearSearch() {
   });
 }
 
+/**
+ * Procura em todos os <block type="…"> do toolbox original
+ * e cria uma categoria "Resultados" só com os que batem.
+ */
+function searchToolboxBlocks() {
+  const term = document.getElementById('block-search').value.trim().toLowerCase();
+  if (!term) return alert('Digite algo para buscar no catálogo.');
+
+  // parse do XML guardado
+  const xmlDom = Blockly.utils.xml.textToDom(originalToolboxXmlText);
+  const resultXml = document.createElement('xml');
+  const resultCat = document.createElement('category');
+  resultCat.setAttribute('name', `Resultados`);
+  resultCat.setAttribute('colour', '210');
+
+  let found = false;
+  xmlDom.querySelectorAll('category').forEach(cat => {
+    cat.querySelectorAll('block').forEach(block => {
+      const type = block.getAttribute('type').toLowerCase();
+      if (type.includes(term)) {
+        resultCat.appendChild(block.cloneNode(true));
+        found = true;
+      }
+    });
+  });
+
+  if (!found) {
+    return alert(`Nenhum bloco encontrado para "${term}".`);
+  }
+
+  resultXml.appendChild(resultCat);
+  // substitui toolbox atual pelo só com “Resultados”
+  workspace.updateToolbox(resultXml);
+}
+
+function clearSearch() {
+  document.getElementById('block-search').value = '';
+  // restaura cores originais
+  workspace.getAllBlocks().forEach(block => {
+    const orig = originalColors[block.id];
+    if (orig != null) block.setColour(orig);
+  });
+  // restaura toolbox original
+  workspace.updateToolbox(originalToolboxDom);
+}
+
+
 
 // Prevenir comportamento padrão de arrastar e soltar
 document.body.addEventListener('dragover', (event) => event.preventDefault());
@@ -603,3 +653,6 @@ workspace.addChangeListener(function() {
 
 document.getElementById('search-blocks').addEventListener('click', searchBlocks);
 document.getElementById('clear-search').addEventListener('click', clearSearch);
+document
+  .getElementById('search-toolbox')
+  .addEventListener('click', searchToolboxBlocks);
