@@ -40,7 +40,19 @@
     <div id="loaded-extensions" style="padding: 10px;"></div>
 
     <div class="container horizontal-layout">
-        <div id="blocklyDiv"></div>
+        <div id="blocklyDiv">
+          <!-- busca de blocos overlay -->
+          <div id="block-search-container">
+            <input
+              type="text"
+              id="block-search"
+              placeholder="Pesquisar blocos..."
+            />
+            <button id="search-blocks">🔍</button>
+            <button id="clear-search">✖</button>
+          </div>
+        </div>
+
         <div id="resize-handle"></div>
         <div class="code-area">
             <div id="code-output" class="code-output"></div>

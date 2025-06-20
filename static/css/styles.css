@@ -67,6 +67,7 @@ body.dark-theme {
 }
 
 #blocklyDiv {
+    position: relative; /* para que o container absoluto se ancore aqui */
     flex-grow: 1;
     width: 70%;
     height: 100%;
@@ -74,6 +75,39 @@ body.dark-theme {
     border: 2px dashed #3498db;
     transition: background-color 0.2s;
 }
+
+/*Pesquisa por blocos*/
+/* container da busca */
+#block-search-container {
+    position: absolute;
+    top: 8px;
+    left: 125px;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 6px 8px;
+    border-radius: 4px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* input e botões transparentes */
+#block-search-container input {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 4px 6px;
+    width: 140px;
+}
+
+#block-search-container button {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 4px 6px;
+    cursor: pointer;
+}
+/*Fim pesquisa por blocos*/
 
 #blocklyDiv.dragging {
     background-color: rgba(52, 152, 219, 0.2);
@@ -105,8 +139,11 @@ body.dark-theme {
     color: #ecf0f1;
     font-family: 'Courier New', Courier, monospace;
     white-space: pre-wrap;
-    overflow-y: auto;
+    overflow-y: auto;        /* Habilita scroll vertical */
+    max-height: 300%;        /* Garante que o scroll só aparece quando necessário */
+    box-sizing: border-box;  /* Inclui padding dentro do max-height */
 }
+
 
 pre code {
     display: block;

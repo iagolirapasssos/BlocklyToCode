@@ -27,6 +27,30 @@ var workspace = Blockly.inject('blocklyDiv', {
     }
 });
 
+
+// Mapa id → cor original
+const originalColors = {};
+
+// Grava cor original de um bloco (se ainda não tiver)
+function recordOriginalColor(block) {
+  if (block && !originalColors[block.id]) {
+    originalColors[block.id] = block.getColour();
+  }
+}
+
+// Inicializa cores originais dos blocos já existentes
+workspace.getAllBlocks().forEach(recordOriginalColor);
+
+// Cada vez que um bloco é criado, registra sua cor original
+workspace.addChangeListener(evt => {
+  if (evt.type === Blockly.Events.BLOCK_CREATE) {
+    evt.ids.forEach(id => {
+      const b = workspace.getBlockById(id);
+      recordOriginalColor(b);
+    });
+  }
+});
+
 window.addEventListener('load', function() {
     const savedXml = localStorage.getItem('blocklyWorkspace');
     if (savedXml) {
@@ -387,12 +411,18 @@ async function executeCode() {
         }
 
         const output = result.run ? result.run.output : 'No output';
-        outputDiv.innerHTML = `<pre><code class="execution-result">${escapeHtml(output)}</code></pre>`;
+      //outputDiv.innerHTML = `<pre><code class="execution-result">${escapeHtml(output)}</code></pre>`;
+        outputDiv.innerHTML = `<pre><code class="language-${language}">${escapeHtml(output)}</code></pre>`;
+
         hljs.highlightElement(outputDiv.querySelector('code'));
+
+        outputDiv.scrollTop = outputDiv.scrollHeight;
+
     } catch (error) {
         console.error('Error executing code:', error);
         outputDiv.innerHTML = `<p class="error">Error: ${escapeHtml(error.message)}</p>`;
     }
+
 
     // Ativar cooldown após a execução
     startCooldown();
@@ -464,6 +494,47 @@ function handleFileDrop(event) {
 }
 
 
+/**
+ * Busca todos os blocos cujo tipo ou texto interno contenha o termo (case-insensitive),
+ * e colore-os de amarelo. Os demais voltam à cor original.
+ */
+function searchBlocks() {
+  const term = document.getElementById('block-search').value.trim().toLowerCase();
+  workspace.getAllBlocks().forEach(block => {
+    // Verifica tipo
+    let match = block.type.toLowerCase().includes(term);
+
+    // Verifica textos em cada campo do bloco
+    block.inputList.forEach(input =>
+      input.fieldRow.forEach(field => {
+        const txt = field.getText && field.getText();
+        if (!match && txt && txt.toLowerCase().includes(term)) {
+          match = true;
+        }
+      })
+    );
+
+    // Aplica destaque ou restaura
+    if (term && match) {
+      block.setColour(60);       // amarelo (HDR: 60°)
+    } else {
+      // restaura cor original
+      const orig = originalColors[block.id];
+      if (orig != null) block.setColour(orig);
+    }
+  });
+}
+
+/** Restaura todos os blocos à cor original e limpa o campo de busca */
+function clearSearch() {
+  document.getElementById('block-search').value = '';
+  workspace.getAllBlocks().forEach(block => {
+    const orig = originalColors[block.id];
+    if (orig != null) block.setColour(orig);
+  });
+}
+
+
 // Prevenir comportamento padrão de arrastar e soltar
 document.body.addEventListener('dragover', (event) => event.preventDefault());
 document.body.addEventListener('drop', handleFileDrop);
@@ -528,3 +599,7 @@ workspace.addChangeListener(function() {
     const xmlText = Blockly.Xml.domToPrettyText(xml);
     localStorage.setItem('blocklyWorkspace', xmlText);
 });
+
+
+document.getElementById('search-blocks').addEventListener('click', searchBlocks);
+document.getElementById('clear-search').addEventListener('click', clearSearch);
